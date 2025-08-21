@@ -1,0 +1,53 @@
+# 基础镜像：CUDA 12.1 + cuDNN8 + Ubuntu 22.04
+FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
+
+# 设置时区，防止交互阻塞
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 更新系统并安装常用依赖
+RUN apt-get update && apt-get install -y \
+    python3-pip python3-dev python3-venv git wget curl unzip libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装运行时依赖
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      fuse3 curl ca-certificates tar \
+  && rm -rf /var/lib/apt/lists/*
+  
+# 安装 Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# 配置 Microsoft 包仓库并安装 blobfuse2
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release; \
+    # 下载并安装 Microsoft packages signing key + repo
+    curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o /tmp/packages-microsoft-prod.deb; \
+    dpkg -i /tmp/packages-microsoft-prod.deb; \
+    rm -f /tmp/packages-microsoft-prod.deb; \
+    apt-get update; \
+    # 然后直接安装 blobfuse2（包名：blobfuse2）
+    apt-get install -y --no-install-recommends blobfuse2 fuse3; \
+    rm -rf /var/lib/apt/lists/*
+
+# 升级 pip
+RUN python3 -m pip install --upgrade pip
+
+# 安装 PyTorch 2.2.0 + cu121
+RUN pip install torch==2.2.0+cu121 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# 复制本地 Depth-Anything 目录到镜像内的 /opt 目录，避免挂载冲突
+COPY Depth-Anything /opt/Depth-Anything
+
+# 复制 requirements.txt
+COPY requirements.txt /tmp/requirements.txt
+
+# 设置工作目录
+WORKDIR /work
+
+# 安装 requirements.txt 中的依赖（其中本地依赖请写成 /opt/Depth-Anything/... 的绝对路径）
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# 容器启动默认进入 bash
+CMD ["/bin/bash"]

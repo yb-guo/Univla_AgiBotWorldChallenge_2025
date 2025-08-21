@@ -1,0 +1,9 @@
+{"project_name": "msra_srobot_azureml", 
+"storage_account_name": "msrasrobotazur5594418711", 
+"container_name": "amulet", 
+"blob_storage_account_name": "msrasrobotazur5594418711", 
+"registry_name": "projects", 
+"local_path": "/data/home/yixiaohan/Navid/msra_srobot_VLN", 
+"default_output_dir": "/home/v-yuboguo/AgiBot-World/UniVLA/amlt_tools", 
+"project_uuid": "7256947599.85164-3bc9725a-7e82-4269-80ba-2d82851a5023", 
+"version": "10.10.4"}

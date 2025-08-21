@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+data
+weights
+outputs
+shared_data
+shared_outputs
+Manipulation-Sim-Datasets
+datasets
+3rd_checkpoints
+checkpoints

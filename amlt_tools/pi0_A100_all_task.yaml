@@ -1,0 +1,39 @@
+description: "AGIBOTWORLDCHALLENGE"
+target:
+  name: agi_bot_challenge
+  service: sing
+  workspace_name: msra_srobot_azureml
+
+environment:
+  registry: SrobotRegistry.azurecr.io
+  image: aigbotworld_challenge_training:latest
+
+storage:
+  data:
+    storage_account_name: msrasrobotazur5594418711
+    container_name: msrasrobotvlndata
+    mount_dir: /work/data
+  pretrained_weights:
+    storage_account_name: msrasrobotazur5594418711
+    container_name: msrasrobotvlnweights
+    mount_dir: /work/weights
+  outputs:
+    storage_account_name: msrasrobotazur5594418711
+    container_name: msrasrobotvlnoutputs
+    mount_dir: /work/outputs
+
+code:
+  local_dir: $CONFIG_DIR/..
+
+jobs:
+  - name: vln_test_training_cube
+    identity: managed
+    submit_args:
+      env:
+        _AZUREML_SINGULARITY_JOB_UAI: "/subscriptions/e033d461-1923-44a7-872b-78f1d35a86dd/resourcegroups/msra_srobot/providers/Microsoft.ManagedIdentity/userAssignedIdentities/msra_srobot_identity"
+    sku: G1-A100
+    command:
+    - sudo cp -r /tmp/amlt-code-download/* /work
+    - cd /work && pip install --no-cache-dir ".[test, aloha, xarm, pusht, dynamixel, smolvla]"
+    - echo "test"
+    - cd /work && python -m lerobot.scripts.train     --policy.path=lerobot/pi0     --dataset.repo_id=/work/data/Manipulation-SimData_LeRobot_all  --output_dir=outputs/train/pi0_base_all_task  --policy.repo_id=dummy
