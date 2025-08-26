@@ -18,14 +18,14 @@ else
     exit 1
 fi
 
-# 检查 tensorboard 是否安装
-if ! python -c "import tensorboard" &> /dev/null; then
-    echo "tensorboard 未安装，正在安装..."
-    # 优先用 conda 安装，如果没有 conda 再用 pip
-    pip install tensorboard --user
-else
-    echo "tensorboard 已安装"
-fi
+# # 检查 tensorboard 是否安装
+# if ! python -c "import tensorboard" &> /dev/null; then
+#     echo "tensorboard 未安装，正在安装..."
+#     # 优先用 conda 安装，如果没有 conda 再用 pip
+#     pip install tensorboard --user
+# else
+#     echo "tensorboard 已安装"
+# fi
 
 # 提取所有 task 文件里的数字
 task_ids=$(ls /work/data/Univla/Manipulation-SimData/meta_data_info/task_*json | grep -oP 'task_\K[0-9]+' | sort -n | uniq)
@@ -38,8 +38,8 @@ torchrun \
 --nnodes 1 \
 --nproc-per-node 1 \
 scripts/finetune.py \
---vla_path /work/shared_outputs/agibot_3rd_ckpt/univla/univla-7b \
---lam_path /work/shared_outputs/agibot_3rd_ckpt/univla/univla-latent-action-model/lam-stage-2.ckpt \
+--vla_path /work/3rd_checkpoints/univla-7b \
+--lam_path /work/3rd_checkpoints/univla-latent-action-model/lam-stage-2.ckpt \
 --data_root_dir /work/data/Univla/Manipulation-SimData/_extracted \
 --meta_json_dir /work/data/Univla/Manipulation-SimData/meta_data_info \
 --codebook_size 16 \

@@ -13,7 +13,7 @@ echo " ########"
 # Helper: 在环境中安装 pip 包
 # -------------------------------
 run_pip() {
-    python -m pip install --upgrade pip setuptools wheel "$@"
+    python3 -m pip install --upgrade pip setuptools wheel "$@"
 }
 
 # -------------------------------
