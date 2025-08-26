@@ -2,6 +2,7 @@
 
 export WANDB_API_KEY="3cc7bfe0dbc951899ed08bf713e010eeebd45365"
 export WANDB_MODE="online"   # 如果想禁用，可以设为 "offline"
+export PYTHONPATH='/work'
 which python
 
 echo " ######## Oral in train.sh ########"
@@ -18,7 +19,7 @@ else
     exit 1
 fi
 
-# # 检查 tensorboard 是否安装
+# 检查 tensorboard 是否安装
 # if ! python -c "import tensorboard" &> /dev/null; then
 #     echo "tensorboard 未安装，正在安装..."
 #     # 优先用 conda 安装，如果没有 conda 再用 pip

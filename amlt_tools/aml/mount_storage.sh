@@ -45,6 +45,24 @@ azstorage:
     container: $container_name
     mode: azcli
 EOL
+
+account_name=msrasrobotazur5594418711
+container_name=msrasrobotvlnweights # msrasrobotvlnoutputs
+
+mount_path=/work/weights/
+tmp_path=/mnt/weights_tmp_data/
+ 
+# Write the config file
+cat > ~/.blobfuse2/config.yaml << EOL
+file_cache:
+    path: $tmp_path
+azstorage:
+    type: block
+    account-name: $account_name
+    endpoint: https://$account_name.blob.core.windows.net
+    container: $container_name
+    mode: azcli
+EOL
 # Mount the directory
 myuser=$(whoami)
 mkdir $mount_path -p

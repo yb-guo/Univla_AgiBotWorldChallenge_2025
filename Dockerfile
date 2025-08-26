@@ -1,5 +1,5 @@
 # 基础镜像：CUDA 12.1 + cuDNN8 + Ubuntu 22.04
-FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
+FROM singularitybase.azurecr.io/base/job/pytorch/acpt-2.2.2-py3.10-cuda12.1:20250226T224107506
 
 # 设置时区，防止交互阻塞
 ENV TZ=Asia/Shanghai
@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 更新系统并安装常用依赖
 RUN apt-get update && apt-get install -y \
-    python3-dev  git wget curl unzip libgl1 libglib2.0-0 \
+    git wget curl unzip libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装运行时依赖
