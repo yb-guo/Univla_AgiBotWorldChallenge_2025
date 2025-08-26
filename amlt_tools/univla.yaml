@@ -31,9 +31,10 @@ jobs:
     submit_args:
       env:
         _AZUREML_SINGULARITY_JOB_UAI: "/subscriptions/e033d461-1923-44a7-872b-78f1d35a86dd/resourcegroups/msra_srobot/providers/Microsoft.ManagedIdentity/userAssignedIdentities/msra_srobot_identity"
-    sku: G1-A100
+    sku: 40G1-A100
     command:
     - sudo cp -r /tmp/amlt-code-download/* /work
+    - sudo chown -R aiscuser /opt/conda/envs/ptca
     - echo "test 1"
     # 把用户 aiscuser 加入组 mygroup
     # - sudo usermod -aG sudo aiscuser
