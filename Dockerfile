@@ -1,38 +1,40 @@
-# 基础镜像：CUDA 12.1 + cuDNN8 + Ubuntu 22.04
-FROM singularitybase.azurecr.io/base/job/pytorch/acpt-2.2.2-py3.10-cuda12.1:20250226T224107506
+FROM singularitybase.azurecr.io/base/job/pytorch/acpt-torch2.5.0-py3.10-cuda12.4-ubuntu22.04:20250227T132634623
+# RUN apt-get update
+# RUN apt install -y wget
+# RUN apt install -y git
+# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py310_25.1.1-2-Linux-x86_64.sh
+# RUN chmod +x Miniconda3-py310_25.1.1-2-Linux-x86_64.sh
+# RUN ./Miniconda3-py310_25.1.1-2-Linux-x86_64.sh -b
+# RUN rm Miniconda3-py310_25.1.1-2-Linux-x86_64.sh
+# ENV PATH="/root/miniconda3/bin:${PATH}"
+# ENV WORKDIR="/work"
+# RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+# RUN dpkg -i cuda-keyring_1.1-1_all.deb
+# RUN apt-get update
+# RUN apt-get -y install cudnn-cuda-12
+# RUN rm cuda-keyring_1.1-1_all.deb
+# RUN source ~/miniconda3/bin/activate
+# RUN pip install packaging ninja
+# RUN pip install accelerate>=0.25.0 draccus>=0.8.0 einops huggingface_hub json-numpy jsonlines matplotlib peft==0.11.1 protobuf rich sentencepiece==0.1.99 \
+#     timm==0.9.10 tokenizers==0.13.3 transformers==4.31.0  tensorflow==2.15.0 tensorflow_datasets==4.9.3 tensorflow_graphics==2021.12.3
 
-# 设置时区，防止交互阻塞
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# RUN pip install "flash-attn==2.5.5" --no-build-isolation
+# RUN pip install opencv-python
+# RUN apt-get update
+# RUN apt-get -y install libglib2.0-0
+RUN pip install wandb
+ENV WANDB_API_KEY="0a85800ab1d195b8ca06aeda0a8c04efc5d917d5"
+RUN wandb login --host=https://microsoft-research.wandb.io
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-# 更新系统并安装常用依赖
-RUN apt-get update && apt-get install -y \
-    git wget curl unzip libgl1 libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN apt-get update
+RUN apt-get install libfuse3-dev fuse3 -y
+RUN apt-get install blobfuse2 -y
+RUN apt-get install -y cmake build-essential python3-dev pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev
 
-# 安装运行时依赖
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      fuse3 curl ca-certificates tar \
-  && rm -rf /var/lib/apt/lists/*
-  
-# 安装 Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# 配置 Microsoft 包仓库并安装 blobfuse2
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release; \
-    # 下载并安装 Microsoft packages signing key + repo
-    curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o /tmp/packages-microsoft-prod.deb; \
-    dpkg -i /tmp/packages-microsoft-prod.deb; \
-    rm -f /tmp/packages-microsoft-prod.deb; \
-    apt-get update; \
-    # 然后直接安装 blobfuse2（包名：blobfuse2）
-    apt-get install -y --no-install-recommends blobfuse2 fuse3; \
-    rm -rf /var/lib/apt/lists/*
 
-# 设置工作目录
+
 WORKDIR /work
-
-# 容器启动默认进入 bash
-CMD ["/bin/bash"]

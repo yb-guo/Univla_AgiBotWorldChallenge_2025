@@ -45,6 +45,11 @@ azstorage:
     container: $container_name
     mode: azcli
 EOL
+# Mount the directory
+myuser=$(whoami)
+mkdir $mount_path -p
+mkdir $tmp_path -p
+blobfuse2 mount $mount_path --config-file ~/.blobfuse2/config.yaml -o allow_other
 
 account_name=msrasrobotazur5594418711
 container_name=msrasrobotvlnweights # msrasrobotvlnoutputs

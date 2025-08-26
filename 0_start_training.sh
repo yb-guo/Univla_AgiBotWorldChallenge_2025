@@ -39,8 +39,8 @@ torchrun \
 --nnodes 1 \
 --nproc-per-node 1 \
 scripts/finetune.py \
---vla_path /work/3rd_checkpoints/univla-7b \
---lam_path /work/3rd_checkpoints/univla-latent-action-model/lam-stage-2.ckpt \
+--vla_path /work/weights/agibot_3rd_ckpt/univla/univla-7b \
+--lam_path /work/weights/agibot_3rd_ckpt/univla/univla-latent-action-model/lam-stage-2.ckpt \
 --data_root_dir /work/data/Univla/Manipulation-SimData/_extracted \
 --meta_json_dir /work/data/Univla/Manipulation-SimData/meta_data_info \
 --codebook_size 16 \
@@ -50,8 +50,8 @@ scripts/finetune.py \
 --save_steps 1000 \
 --decoder_n_layers 2 \
 --decoder_hidden_dim 1024 \
---run_root_dir shared_outputs/train_univla \
---adapter_tmp_dir shared_outputs/train_univla \
+--run_root_dir outputs/train_univla \
+--adapter_tmp_dir outputs/train_univla \
 --save_latest_checkpoint_only \
 --with_proprio \
 --use_lora \
