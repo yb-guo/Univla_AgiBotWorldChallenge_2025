@@ -193,7 +193,7 @@ class ControllableDINOLatentActionModel(nn.Module):
         self.dino_transform = transforms.Normalize(mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD)
         #ybg change the path to local dinov2 model
         self.dino_encoder = torch.hub.load('Depth-Anything/torchhub/facebookresearch_dinov2_main', 'dinov2_vitb14_reg', source='local', pretrained=False)
-        self.dino_encoder.load_state_dict(torch.load('/work/shared_outputs/agibot_3rd_ckpt/univla/dinov2_vitb14_reg4_pretrain.pth', map_location='cpu'))
+        self.dino_encoder.load_state_dict(torch.load('/work/weights/agibot_3rd_ckpt/univla/dinov2_vitb14_reg4_pretrain.pth', map_location='cpu'))
 
         # self.dino_encoder = torch.hub.load('latent_action_model/facebookresearch_dinov2_main', 'dinov2_vitb14_reg', source='local', pretrained=False)
         # self.dino_encoder.load_state_dict(torch.load('latent_action_model/facebookresearch_dinov2_main/dinov2_vitb14_reg4_pretrain.pth', map_location='cpu'))
